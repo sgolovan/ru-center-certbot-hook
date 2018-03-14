@@ -1,0 +1,6 @@
+CONFIG = {
+    'RUC_APPID' : '1234567890',
+    'RUC_APPSECRET' : 'qwertyuiop',
+    'RUC_USER' : '123/NIC-D',
+    'RUC_PASS' : 'qwe'
+    }
