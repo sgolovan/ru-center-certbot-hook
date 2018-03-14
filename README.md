@@ -1,3 +1,8 @@
+[//]: # "Copyright (c) 2018 Sergei Golovan"
+[//]: # ""
+[//]: # "# See the file LICENSE for information on usage and redistribution"
+[//]: # "of this file, and for a DISCLAIMER OF ALL WARRANTIES."
+
 # Certbot Hook for DNS ACME Challenge for RU-CENTER DNS-Master API
 
 This script is intended to be used as a [Certbot](https://certbot.eff.org/) hook

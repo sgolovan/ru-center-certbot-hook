@@ -1,5 +1,11 @@
 #!/usr/bin/python3
 # coding=utf-8
+#
+# Copyright (c) 2018 Sergei Golovan
+#
+# See the file "LICENSE" for information on usage and redistribution
+# of this file, and for a DISCLAIMER OF ALL WARRANTIES.
+
 import xml.etree.ElementTree as Xml
 from os import environ, path
 from sys import stderr, argv

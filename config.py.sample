@@ -1,3 +1,10 @@
+# coding=utf-8
+#
+# Copyright (c) 2018 Sergei Golovan
+#
+# See the file "LICENSE" for information on usage and redistribution
+# of this file, and for a DISCLAIMER OF ALL WARRANTIES.
+
 CONFIG = {
     'RUC_APPID' : '1234567890',
     'RUC_APPSECRET' : 'qwertyuiop',
