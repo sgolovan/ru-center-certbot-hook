@@ -1,6 +1,29 @@
 # Certbot Hook for DNS ACME Challenge for RU-CENTER DNS-Master API
 
-TODO
+This script is intended to be used as a [Certbot](https://certbot.eff.org/) hook
+to automatically create `_acme-challenge.` TXT DNS records for domain ownership
+proof, and to ceanup them after finishing the verification procedure.
+
+It uses the [RU-CENTER](https://www.nic.ru) API for updating DNS zones, so
+it works only if you host your primary DNS server at RU-CENTER.
+
+The script commits changes to the DNS zones, so it might cause data loss if
+it's executed during some other manipulations with them.
+
+## System requirements
+
+* Python 3
+* requests
+* lxml
+
+## Usage
+
+1. Register an application at RU-CENTER.
+2. Copy the sample config `config.py.sample` into `config.py`, fill in your
+   application ID, secret, and RU-CENTER admin username and password.
+3. Start `certbot` with the manual plugin and specify the script for its hooks:
+
+    certbot  certonly --manual --preferred-challenges=dns --manual-auth-hook /path/to/ru-center-certbot-auth-hook --manual-cleanup-hook /path/to/ru-center-certbot-cleanup-hook -d secure.example.org
 
 ## Links
 
