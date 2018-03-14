@@ -23,7 +23,7 @@ it's executed during some other manipulations with them.
    application ID, secret, and RU-CENTER admin username and password.
 3. Start `certbot` with the manual plugin and specify the script for its hooks:
 
-    certbot  certonly --manual --preferred-challenges=dns --manual-auth-hook /path/to/ru-center-certbot-auth-hook --manual-cleanup-hook /path/to/ru-center-certbot-cleanup-hook -d secure.example.org
+        certbot  certonly --manual --preferred-challenges=dns --manual-auth-hook /path/to/ru-center-certbot-auth-hook --manual-cleanup-hook /path/to/ru-center-certbot-cleanup-hook -d secure.example.org
 
 ## Links
 
