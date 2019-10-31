@@ -7,7 +7,7 @@
 
 This script is intended to be used as a [Certbot](https://certbot.eff.org/) hook
 to automatically create `_acme-challenge.` TXT DNS records for domain ownership
-proof, and to ceanup them after finishing the verification procedure.
+proof, and to cleanup them after finishing the verification procedure.
 
 It uses the [RU-CENTER](https://www.nic.ru) API for updating DNS zones, so
 it works only if you host your primary DNS server at RU-CENTER.
