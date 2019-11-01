@@ -14,6 +14,7 @@ import lxml.builder
 from base64 import b64encode
 from requests import get, post, put, delete
 import time
+import dns.resolver
 
 def die(message, code=1):
     stderr.write(message + "\n")
@@ -137,6 +138,22 @@ class RuCenterApi(object):
 
 if __name__ == '__main__':
 
+    def resolveDNS(what, rtype, server=None):
+        try:
+            if server == None:
+                answers = dns.resolver.query(what, rtype)
+            else:
+                resolver = dns.resolver.Resolver()
+                resolver.nameservers = [server]
+                answers = resolver.query(what, rtype)
+        except:
+            return []
+
+        res = []
+        for ans in answers:
+            res.append(str(ans))
+        return res
+
     from config import CONFIG
 
     try:
@@ -154,9 +171,42 @@ if __name__ == '__main__':
         acmeVal = environ['CERTBOT_VALIDATION']
 
         if path.basename(argv[0]) == "ru-center-certbot-auth-hook":
-            stderr.write("Creating TXT DNS record for %s\n" % acmeDomain)
+            print("Creating TXT DNS record for %s\n" % acmeDomain)
             rid = uploader.add_txt_record(acmeDomain, acmeVal)
             uploader.commit_changes()
+
+            labels = environ['CERTBOT_DOMAIN'].split('.')
+            for start in range(0, len(labels)):
+                answers = resolveDNS('.'.join(labels[start:])+'.', 'NS')
+                if len(answers) > 0:
+                    break
+
+            if len(answers) > 0:
+                ipanswers = []
+                for server in answers:
+                    # TODO: IPv6 support
+                    ipanswers.extend(resolveDNS(server, 'A'))
+
+                count = 0
+                while (len(ipanswers) > 0) and (count < 20):
+                    # Wait until all the authoritative nameservers have the ACME challenge record
+
+                    count += 1
+                    print("Round %d" % count)
+                    for ip in ipanswers.copy():
+                        answers = resolveDNS(acmeDomain, 'TXT', ip)
+                        if len(answers) == 0:
+                            print("DNS server %s: Record for %s doesn't exist yet" % (ip, acmeDomain))
+                        else:
+                            for data in answers:
+                                if (data == acmeVal) or (data == '"'+acmeVal+'"') or (data == "'"+acmeVal+"'"):
+                                    # For some reason, dns.resolver.query() returns TXT records in quotes
+                                    ipanswers.remove(ip)
+                                    break
+                            else:
+                                print("DNS server %s: Another record for %s exists" % (ip, acmeDomain))
+                    if len(ipanswers) > 0:
+                        time.sleep(5)
 
         elif path.basename(argv[0]) == "ru-center-certbot-cleanup-hook":
             records = uploader.list_records()
@@ -170,7 +220,7 @@ if __name__ == '__main__':
                     continue
 
                 if (name == acmeDomain or name + "." + zone[1] + "." == acmeDomain) and (data == acmeVal):
-                    stderr.write("Deleting TXT DNS record %s for %s\n" % (rid, acmeDomain))
+                    print("Deleting TXT DNS record %s for %s\n" % (rid, acmeDomain))
                     uploader.delete_record(rid)
             uploader.commit_changes()
         else:
