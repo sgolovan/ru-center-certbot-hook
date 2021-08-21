@@ -141,11 +141,11 @@ if __name__ == '__main__':
     def resolveDNS(what, rtype, server=None):
         try:
             if server == None:
-                answers = dns.resolver.query(what, rtype)
+                answers = dns.resolver.resolve(what, rtype)
             else:
                 resolver = dns.resolver.Resolver()
                 resolver.nameservers = [server]
-                answers = resolver.query(what, rtype)
+                answers = resolver.resolve(what, rtype)
         except:
             return []
 
@@ -200,7 +200,7 @@ if __name__ == '__main__':
                         else:
                             for data in answers:
                                 if (data == acmeVal) or (data == '"'+acmeVal+'"') or (data == "'"+acmeVal+"'"):
-                                    # For some reason, dns.resolver.query() returns TXT records in quotes
+                                    # For some reason, dns.resolver.resolve() returns TXT records in quotes
                                     ipanswers.remove(ip)
                                     break
                             else:
